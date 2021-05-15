@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player {
+public class Torpedo {
 
     private Bitmap bitmap;
     private List<Rect> frames;
@@ -29,8 +29,7 @@ public class Player {
 
     private Joystick joystick;
 
-    public Player(Bitmap bitmap, Joystick joystick, double positionX, double positionY, Rect initialFrame) {
-        this.joystick = joystick;
+    public Torpedo(Bitmap bitmap, double positionX, double positionY, Rect initialFrame) {
         this.bitmap = bitmap;
         x = positionX;
         y = positionY;
@@ -60,11 +59,6 @@ public class Player {
         currentFrame = (currentFrame + 1) % frames.size();
     }
 
-    public void shoot(MotionEvent event){
-        event.getX();
-        event.getY();
-
-    }
 
     public void draw(Canvas canvas){
         Paint paint = new Paint();
