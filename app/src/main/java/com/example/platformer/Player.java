@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class Player {
     private int frameWidth;
     private int frameHeight;
     private int padding;
-
+ private double playerSpeed = 3;
     private int currentFrame;
     private double frameTime;
     private double timeForCurrentFrame;
@@ -55,14 +56,17 @@ public class Player {
             timeForCurrentFrame = timeForCurrentFrame - frameTime;
         }
 
-        x = x + joystick.getActuatorX();
-        y = y + joystick.getActuatorY();
+
+        x = x + playerSpeed*joystick.getActuatorX();
+        y = y + playerSpeed*joystick.getActuatorY();
         currentFrame = (currentFrame + 1) % frames.size();
     }
 
-    public void shoot(MotionEvent event){
-        event.getX();
-        event.getY();
+    public Torpedo shoot(MotionEvent event, double startX, double startY){
+        Bitmap bitmapTorpedo = Bitmap.createBitmap(10, 10,Bitmap.Config.ARGB_8888);
+        Rect rectTorpedo = new Rect(0, 0, 10, 10);
+        Torpedo torpedo = new Torpedo(bitmapTorpedo, startX, startY, event.getX(), event.getY(), rectTorpedo);
+       return torpedo;
 
     }
 

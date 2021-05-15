@@ -19,13 +19,11 @@ public class Background {
     private int padding;
 
     private int currentFrame;
-    private double frameTime;
-    private double timeForCurrentFrame;
+
 
     private double x;
     private double y;
-    private double velocityX;
-    private double velocityY;
+
 
 
     public Background(Bitmap bitmap, double positionX, double positionY, Rect initialFrame) {
@@ -33,8 +31,6 @@ public class Background {
         this.bitmap = bitmap;
         x = positionX;
         y = positionY;
-        velocityX = 0;
-        velocityY = 0;
         frames = new ArrayList<>();
         frames.add(initialFrame);
         this.padding = 20;

@@ -14,12 +14,15 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     private final Joystick joystick;
     private final Player player;
     private final Background background,background1;
     protected SurfaceHolder holder;
+    ArrayList<Torpedo> torpedoList;
 
     public Game(Context context) {
         super(context);
@@ -27,9 +30,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         holder = getHolder();
         holder.addCallback(this);
         DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
+       torpedoList = new ArrayList<Torpedo>();
 
         joystick = new Joystick(displaymetrics.widthPixels/12*10, displaymetrics.heightPixels/12*10, 70, 40);
-        int viewHeight = getHolder().getSurfaceFrame().bottom;
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_run);
         Bitmap bitmapBackFirst = BitmapFactory.decodeResource(getResources(), R.drawable.map1);
         Bitmap bitmapBackSecond = BitmapFactory.decodeResource(getResources(), R.drawable.map2);
@@ -68,11 +71,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: // если каснулся
                 if (joystick.getIsPressed()) {
-                    player.shoot(event);
+                    Bitmap bitmapTorpedo =BitmapFactory.decodeResource(getResources(), R.drawable.player_run);
+                    Rect rectTorpedo = new Rect(0, 0, 90, 300);
+                    Torpedo torpedo = new Torpedo(bitmapTorpedo, player.getX(), player.getY(), event.getX(), event.getY(), rectTorpedo);
+                    torpedoList.add(torpedo);
                 } else if (joystick.isPressed((double) event.getX(), (double) event.getY())) {
                     joystick.setIsPressed(true);
                 } else {
-                    player.shoot(event);
+                    torpedoList.add(player.shoot(event, player.getX(), player.getY()));
                 }
                 return true;
             case MotionEvent.ACTION_MOVE: // если палец движется по экрану
@@ -104,7 +110,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             int viewHeight = getHolder().getSurfaceFrame().bottom;
             Log.i(TAG, ""+viewHeight+" "+viewWidth);
             while (work){
-
                 canvas = holder.lockCanvas();
                 canvas.drawColor(Color.BLUE);
                 background.update(1, viewHeight);
@@ -112,9 +117,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 background1.update(1,viewHeight);
                 background1.draw(canvas);
                 joystick.update();
+                for (int i=0; i<torpedoList.size(); i++){
+                    Log.i("LofUpdate", "update");
+                    torpedoList.get(i).update();
+                }
                 player.update(1);
+                for (int i=0; i<torpedoList.size(); i++){
+                    torpedoList.get(i).draw(canvas);
+                    Log.i("LofUpdate", "draw");
+                }
                 player.draw(canvas);
-
                 joystick.draw(canvas);
                 holder.unlockCanvasAndPost(canvas);
                 try {

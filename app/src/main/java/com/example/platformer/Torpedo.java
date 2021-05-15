@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -24,15 +25,28 @@ public class Torpedo {
 
     private double x;
     private double y;
+    private double fx;
+    private double fy;
     private double velocityX;
     private double velocityY;
 
-    private Joystick joystick;
+    private double speed = 10;
 
-    public Torpedo(Bitmap bitmap, double positionX, double positionY, Rect initialFrame) {
+    private Joystick joystick;
+    double stepX;
+    public Torpedo(Bitmap bitmap, double positionX, double positionY, double finX, double finY, Rect initialFrame) {
+        Log.d("My", "Тест");
         this.bitmap = bitmap;
         x = positionX;
         y = positionY;
+        fx=finX;
+        fy=finY;
+
+        double dx = finX - x;
+        double dy = finY - y;
+         stepX= dx/dy;
+        // на 1 пиксель по y будет приходиться y*stepX пикселей по х
+
         velocityX = 0;
         velocityY = 0;
         frames = new ArrayList<>();
@@ -45,25 +59,21 @@ public class Torpedo {
         this.frameHeight = initialFrame.height();
     }
 
-    public void update(int ms){
-
-        timeForCurrentFrame += ms;
-
-        if (timeForCurrentFrame >= frameTime){
-            currentFrame = (currentFrame + 1) % frames.size();
-            timeForCurrentFrame = timeForCurrentFrame - frameTime;
+    public void update(){
+        x = x+ (stepX);
+        y = y;
+        if (x==fx&&y==fy){
+            Log.i("LofUpdate", "дошло");
         }
-
-        x = x + joystick.getActuatorX();
-        y = y + joystick.getActuatorY();
-        currentFrame = (currentFrame + 1) % frames.size();
     }
 
 
     public void draw(Canvas canvas){
         Paint paint = new Paint();
-        Rect destination = new Rect((int)x, (int)y, (int)(x+frameWidth), (int)(y+frameHeight));
+        Log.i("LofUpdate", String.valueOf(frames.size()));
+        Rect destination = new Rect((int)555, (int)555, (int)(55+55), (int)(55+55));
         canvas.drawBitmap(bitmap, frames.get(currentFrame), destination, paint);
+        canvas.drawCircle(50, 50, 20, paint);
     }
 
     public Rect getBoundingBoxRect(){
