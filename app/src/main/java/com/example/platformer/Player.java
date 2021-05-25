@@ -104,6 +104,20 @@ public class Player {
     public void setFrameWidth(int frameWidth) {
         this.frameWidth = frameWidth;
     }
+    public void setSide(int width, int height){
+        if (x>width){
+            x=0;
+        }
+        else if (x<0){
+            x=width;
+        }
+        if (y>height){
+            y=0;
+        }
+        else if (y<0){
+            y=height;
+        }
+    }
 
     public int getFrameHeight() {
         return frameHeight;

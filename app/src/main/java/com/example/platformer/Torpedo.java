@@ -22,8 +22,10 @@ public class Torpedo {
     private int currentFrame;
     private double frameTime;
     private double timeForCurrentFrame;
-
+    private double angle = 0;
     private double x;
+    double lenghY;
+    double lenghX;
     private double y;
     private double fx;
     private double fy;
@@ -57,11 +59,19 @@ public class Torpedo {
         this.frameTime = 0.1;
         this.frameWidth = initialFrame.width();
         this.frameHeight = initialFrame.height();
+         lenghX = fx-x;
+         lenghY = fy-y;
     }
 
     public void update(){
-        x = x+ (stepX);
-        y = y;
+//        double gip = Math.sqrt((fy-y)*(fy-y)+(fx-x)*(fx-x));
+//        if (angle==0){
+//        angle= Math.tan((fy-y)/(fx-x));}
+        speed=1/(Math.abs(lenghX)+Math.abs(lenghY))*20;
+
+        x = x+lenghX*speed;
+        y = y+lenghY*speed+10;
+        Log.i("LofUpdate", "speed"+speed);
         if (x==fx&&y==fy){
             Log.i("LofUpdate", "дошло");
         }
@@ -70,24 +80,18 @@ public class Torpedo {
 
     public void draw(Canvas canvas){
         Paint paint = new Paint();
-        Log.i("LofUpdate", String.valueOf(frames.size()));
-        Rect destination = new Rect((int)555, (int)555, (int)(55+55), (int)(55+55));
+        Rect destination = new Rect((int)2, (int)2, (int)(2), (int)(2));
         canvas.drawBitmap(bitmap, frames.get(currentFrame), destination, paint);
-        canvas.drawCircle(50, 50, 20, paint);
+        if (x!=fx){
+            canvas.drawCircle((float)x, (float)y, 20, paint);
+        }
+        else{
+            canvas.drawCircle((float)x, (float)y, 90, paint);
+        }
     }
 
-    public Rect getBoundingBoxRect(){
-        return new Rect((int)(x+padding), (int)(y+padding),
-                (int)(x+frameWidth-2*padding), (int)(y+frameHeight-2*padding));
-    }
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
 
     public List<Rect> getFrames() {
         return frames;
@@ -147,6 +151,12 @@ public class Torpedo {
 
     public double getX() {
         return x;
+    }
+    public double getFx() {
+        return fx;
+    }
+    public double getFy() {
+        return fy;
     }
 
     public void setX(double x) {
